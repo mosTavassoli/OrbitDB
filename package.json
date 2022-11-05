@@ -1,0 +1,20 @@
+{
+  "name": "orbitdb",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start" : "nodemon -w index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/orbit-db": "github:orbitdb/orbit-db-types",
+    "ipfs": "^0.65.0",
+    "multiformats": "^9.9.0",
+    "orbit-db": "^0.28.7"
+  }
+}
