@@ -32,13 +32,24 @@ export default class NewPiecePlease {
     };
     this.pieces = await this.orbitdb.docstore("pieces", docStoreOptions);
     await this.pieces.load();
+
+    this.user = await this.orbitdb.kvstore("user", this.defaultOptions);
+    await this.user.load();
+    await this.user.set("pieces", this.pieces.id);
+
     this.onready();
   }
 
   async addNewPiece(hash, instrument = "Piano") {
     const existingPiece = this.getPieceByHash(hash);
     if (!existingPiece) {
-      const cid = await this.pieces.put({ hash, instrument });
+      const dbName = "counter." + hash.substr(20, 20);
+      const counter = await this.orbitdb.counter(dbName, this.defaultOptions);
+      const cid = await this.pieces.put({
+        hash,
+        instrument,
+        counter: counter.id,
+      });
       return cid;
     } else {
       return await this.updatePieceByHash(hash, instrument);
@@ -60,7 +71,7 @@ export default class NewPiecePlease {
   }
 
   async updatePieceByHash(hash, instrument = "Piano") {
-    console.log(hash, instrument);
+    // console.log(hash, instrument);
     const piece = await this.getPieceByHash(hash);
     if (piece) {
       piece.instrument = instrument;
@@ -77,5 +88,36 @@ export default class NewPiecePlease {
       return cid;
     }
     return null;
+  }
+
+  async getPracticeCount(piece) {
+    const counter = await this.orbitdb.counter(piece.counter);
+    await counter.load();
+    return counter.value;
+  }
+
+  async incPracticeCounter(piece) {
+    const counter = await this.orbitdb.counter(piece.counter);
+    await counter.load();
+    const cid = await counter.inc();
+    return cid;
+  }
+
+  async delProfileField(key) {
+    const cid = await this.user.del(key);
+    return cid;
+  }
+
+  async getAllProfileField() {
+    return this.user.all;
+  }
+
+  async getProfileField(key) {
+    return this.user.get(key);
+  }
+
+  async updateProfileField(key, value) {
+    const cid = await this.user.set(key, value);
+    return cid;
   }
 }

@@ -20,16 +20,21 @@ const main = async () => {
     const NPP = new NewPiecePlease(Ipfs, OrbitDB);
     NPP.onready = async () => {
       // ---------------- add item ----------------
-      const addCid = await NPP.addNewPiece(
-        "QmTjszMGLb5gKWAhFZbo8b5LbhCGJkgS8SeeEYq3P54Vih"
-      );
-      if (addCid) {
-        // solve the issue of getting cid via https://bytemeta.vip/repo/ipfs/js-ipfs/issues/3854
-        const content = await NPP.node.dag.get(CID.parse(addCid));
-        console.log(content.value.payload);
-      }
+      await NPP.updateProfileField("username", "mostafa");
+      const profileFields = NPP.getAllProfileField();
+      console.log(profileFields);
 
-      // ---------------- delete item by instrument ----------------
+      // ---------------- add item ----------------
+      // const addCid = await NPP.addNewPiece(
+      //   "QmNR2n4zywCV61MeMLB6JwPueAPqheqpfiA4fLPMxouEmQ"
+      // );
+      // if (addCid) {
+      //   // solve the issue of getting cid via https://bytemeta.vip/repo/ipfs/js-ipfs/issues/3854
+      //   const content = await NPP.node.dag.get(CID.parse(addCid));
+      //   console.log(content.value.payload);
+      // }
+
+      // ---------------- delete item by hash ----------------
       const delCid = await NPP.deletePieceByHash(
         "QmQS4QNi8DCceGzKjfmbBhLTRExNboQ8opUd988SLEtZpW"
       );
@@ -38,14 +43,21 @@ const main = async () => {
         console.log("delete item: ", content.value.payload);
       }
 
-      // ---------------- get item by hash ----------------
+      // ---------------- get item by hash and inc ----------------
       const piece = NPP.getPieceByHash(
         "QmNR2n4zywCV61MeMLB6JwPueAPqheqpfiA4fLPMxouEmQ"
       );
+      // console.log(piece);
+      const incCID = await NPP.incPracticeCounter(piece);
+      const content = await NPP.node.dag.get(CID.parse(incCID));
+      console.log(content.value.payload);
+
+      // const counterValue = await NPP.getPracticeCount(piece);
+      // console.log(counterValue);
 
       // ---------------- get item by instrument ----------------
       const piecesByInstrument = NPP.getPieceByInstrument("Piano");
-      console.log(piecesByInstrument);
+      // console.log(piecesByInstrument);
 
       // ---------------- upadte an item ----------------
       const updatePiece = await NPP.updatePieceByHash(
