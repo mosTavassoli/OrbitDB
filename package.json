@@ -5,7 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start" : "nodemon -w index.js",
+    "start": "nodemon -w index.js",
+    "exp-run": "nodemon -w ./experiments/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -15,6 +16,7 @@
     "@types/orbit-db": "github:orbitdb/orbit-db-types",
     "ipfs": "^0.65.0",
     "multiformats": "^9.9.0",
-    "orbit-db": "^0.28.7"
+    "orbit-db": "^0.28.7",
+    "seedrandom": "^3.0.5"
   }
 }
