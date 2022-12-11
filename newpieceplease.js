@@ -7,6 +7,7 @@ export default class NewPiecePlease {
   async create() {
     this.node = await this.Ipfs.create({
       preload: { enabled: false },
+      // relay: { enabled: true, hop: { enabled: true, actice: true } },
       repo: "./ipfs",
       EXPERIMENTAL: { pubsub: true },
       config: {
@@ -119,5 +120,10 @@ export default class NewPiecePlease {
   async updateProfileField(key, value) {
     const cid = await this.user.set(key, value);
     return cid;
+  }
+
+  async getIpfsPeers() {
+    const peerIds = (await this.node.swarm.peers()).map((peer) => peer.peer);
+    return peerIds;
   }
 }
