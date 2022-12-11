@@ -1,4 +1,2 @@
-
-      id, put_duration, get_duration
-       1670800783500 ,246.2120689973235, 0
-    
+id, key_number, put_duration, get_duration 
+1670802019230, 30, 404.06632198393345, 0
