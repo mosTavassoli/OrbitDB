@@ -1,8 +1,10 @@
 import OrbitDB from "orbit-db";
 import API from "./API.js";
 import * as Ipfs from "ipfs";
+import seedrandom from "seedrandom";
 
 const main = async () => {
+  const rng = seedrandom();
   let keyNumbers = "";
   let valueSize = "";
   if (process.argv.slice(2).length === 0) {
@@ -18,11 +20,14 @@ const main = async () => {
     console.log(`keyNumbers: ${keyNumbers}, valueSize: ${valueSize}`);
   }
   try {
-    const api = new API(Ipfs, OrbitDB);
+    const api = new API(Ipfs, OrbitDB, keyNumbers, valueSize, rng);
     api.onready = async () => {
-      await api.put(keyNumbers, valueSize);
-      // const value = await api.get();
-      // console.log(`value: ${value}`);
+      await api.createFile();
+      await api.put();
+      await sleep(2000);
+      await api.get();
+      await sleep(2000);
+      await api.del();
     };
 
     await api.create();
@@ -30,5 +35,10 @@ const main = async () => {
     console.log(error);
   }
 };
+
+// Sleep function
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 main();
