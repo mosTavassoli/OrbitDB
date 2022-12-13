@@ -15,19 +15,20 @@ const main = async () => {
     );
     return;
   } else {
-    keyNumbers = process.argv.slice(2)[0];
-    valueSize = process.argv.slice(2)[1];
+    // keyNumbers = process.argv.slice(2)[0].split(",");
+    keyNumbers = JSON.parse(process.argv.slice(2)[0]);
+    valueSize = process.argv.slice(3);
     console.log(`keyNumbers: ${keyNumbers}, valueSize: ${valueSize}`);
   }
   try {
-    const api = new API(Ipfs, OrbitDB, keyNumbers, valueSize, rng);
+    const api = new API(Ipfs, OrbitDB, valueSize, rng);
     api.onready = async () => {
-      await api.createFile();
-      await api.put();
-      await sleep(2000);
-      await api.get();
-      await sleep(2000);
-      await api.del();
+      // await api.createFile();
+      for (let keyNumber of keyNumbers) {
+        await api.put(keyNumber);
+        await api.get(keyNumber);
+        // await api.del(keyNumber);
+      }
     };
 
     await api.create();
@@ -35,10 +36,5 @@ const main = async () => {
     console.log(error);
   }
 };
-
-// Sleep function
-function sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
 
 main();

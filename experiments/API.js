@@ -1,16 +1,13 @@
 import fs from "fs";
 
 export default class API {
-  constructor(Ipfs, OrbitDB, keyNumbers, valueSize, rng) {
+  constructor(Ipfs, OrbitDB, valueSize, rng) {
     console.log("API constructor");
     this.Ipfs = Ipfs;
     this.OrbitDB = OrbitDB;
-    this.start = 0;
-    this.end = 0;
     this.putDuration = 0;
     this.getDuration = 0;
     this.prefix = "key";
-    this.keyNumbers = keyNumbers;
     this.valueSize = valueSize;
     this.rng = rng; // Seeded random number generator
   }
@@ -58,48 +55,51 @@ export default class API {
   }
 
   // put key-value pairs into the database
-  async put() {
-    let rand_string = "";
+  async put(keyNumber) {
+    let start, end;
+    // for testing
+    await this.exp.put("1", "test");
+    await this.exp.del("1");
     console.log("----------------- put start -----------------");
-    for (let i = 0; i < this.keyNumbers; i++) {
-      rand_string = this.randStr();
-      // console.log(`key: ${this.prefix}-${i}, value: ${rand_string}`);
-      this.start = performance.now();
+    for (let i = 0; i < keyNumber; i++) {
+      const rand_string = this.randStr();
+      start = performance.now();
       await this.exp.put(`${this.prefix}-${i}`, rand_string);
-      this.end = performance.now();
-      this.putDuration += this.end - this.start;
+      end = performance.now();
+      this.putDuration += end - start;
     }
-    console.log(`duration: ${this.putDuration}`);
+    this.putDuration = 0;
   }
 
   // get values from the database
-  async get() {
+  async get(keyNumber) {
+    let start, end;
     console.log("----------------- get start -----------------");
-    for (let i = 0; i < this.keyNumbers; i++) {
-      this.start = performance.now();
+    for (let i = 0; i < keyNumber; i++) {
+      start = performance.now();
+      // this.start = new Date().getTime();
       const value = await this.exp.get(`${this.prefix}-${i}`);
-      this.end = performance.now();
-      this.getDuration += this.end - this.start;
+      end = performance.now();
+      this.getDuration += end - start;
     }
-    console.log(`duration: ${this.getDuration}`);
-    this.writeToFile();
+    this.writeToFile(keyNumber);
   }
 
-  async del() {
+  async del(keyNumber) {
     console.log("----------------- del start -----------------");
-    for (let i = 0; i < this.keyNumbers; i++) {
+    for (let i = 0; i < keyNumber; i++) {
       await this.exp.del(`${this.prefix}-${i}`);
     }
-    console.log("delete done!");
+    // console.log("delete done!");
   }
 
   // write calculated time measurement to a csv file
-  writeToFile() {
+  writeToFile(keyNumber) {
     const date = new Date();
-    const data = `${date.getTime()}, ${this.keyNumbers}, ${this.valueSize}, ${
+    const data = `${date.getTime()}, ${keyNumber}, ${this.valueSize}, ${
       this.putDuration
-    }, ${this.getDuration}\n`;
-    fs.appendFile("timeMeasurement.csv", data, (err) => {
+    }, ${this.getDuration} \n`;
+    fs.appendFile(`./logs/orbitdb_stats_${this.valueSize}.csv`, data, (err) => {
       if (err) throw err;
       console.log("Save done!");
     });
@@ -111,10 +111,9 @@ export default class API {
   randStr = () => {
     const chars =
       "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
-    const charLength = chars.length;
     let result = "";
-    for (var i = 0; i < this.valueSize; i++) {
-      result += chars.charAt(Math.floor(this.rng() * charLength));
+    for (let j = 0; j < this.valueSize; j++) {
+      result += chars.charAt(Math.floor(this.rng() * chars.length));
     }
     return result;
   };
