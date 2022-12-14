@@ -4,7 +4,7 @@
 
 value_size=$1
 
-keyNumber=(5)
+keyNumber=(20,30,40)
 
 initHeaderCSV () {
   echo "id, key_number, value_size, put_duration[ms], get_duration[ms]" > $1
@@ -12,4 +12,6 @@ initHeaderCSV () {
 
 initHeaderCSV ./logs/orbitdb_stats_$value_size.csv
 
-node ./index.js [${keyNumber[@]}] $value_size
+nodemon --no-experimental-fetch ./index.js [${keyNumber[@]}] $value_size
+
+# --no-warnings 

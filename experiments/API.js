@@ -1,37 +1,23 @@
 import fs from "fs";
 
 export default class API {
-  constructor(Ipfs, OrbitDB, valueSize, rng) {
-    console.log("API constructor");
+  constructor(Ipfs, OrbitDB, keyNumbers, valueSize, rng) {
+    console.log("API constructor called");
     this.Ipfs = Ipfs;
     this.OrbitDB = OrbitDB;
     this.putDuration = 0;
     this.getDuration = 0;
     this.prefix = "key";
+    this.keyNumber = keyNumbers;
     this.valueSize = valueSize;
     this.rng = rng; // Seeded random number generator
-  }
-
-  async createFile() {
-    if (fs.existsSync("timeMeasurement.csv")) {
-      console.log("File already exists.");
-    } else {
-      fs.writeFile(
-        "timeMeasurement.csv",
-        "id, key_number, value_size, put_duration, get_duration\n",
-        (err) => {
-          if (err) throw err;
-          console.log("File is created successfully.");
-        }
-      );
-    }
   }
 
   async create() {
     this.node = await this.Ipfs.create({
       preload: { enabled: false },
-      // relay: { enabled: true, hop: { enabled: true, actice: true } },
       repo: "./ipfs",
+      // relay: { enabled: true, hop: { enabled: true, actice: true } },
       EXPERIMENTAL: { pubsub: true },
       config: {
         Bootstrap: [],
@@ -50,7 +36,7 @@ export default class API {
       },
     };
     this.exp = await this.orbitdb.keyvalue("exp");
-    await this.exp.load();
+    // await this.exp.load();
     this.onready();
   }
 
@@ -58,8 +44,6 @@ export default class API {
   async put(keyNumber) {
     let start, end;
     // for testing
-    await this.exp.put("1", "test");
-    await this.exp.del("1");
     console.log("----------------- put start -----------------");
     for (let i = 0; i < keyNumber; i++) {
       const rand_string = this.randStr();
@@ -68,7 +52,6 @@ export default class API {
       end = performance.now();
       this.putDuration += end - start;
     }
-    this.putDuration = 0;
   }
 
   // get values from the database
@@ -85,13 +68,29 @@ export default class API {
     this.writeToFile(keyNumber);
   }
 
-  async del(keyNumber) {
-    console.log("----------------- del start -----------------");
-    for (let i = 0; i < keyNumber; i++) {
-      await this.exp.del(`${this.prefix}-${i}`);
-    }
-    // console.log("delete done!");
-  }
+  // delete key-value pairs from the database
+  // async del(keyNumber) {
+  //   console.log("----------------- del start -----------------");
+  //   for (let i = 0; i < keyNumber; i++) {
+  //     await this.exp.del(`${this.prefix}-${i}`);
+  //   }
+  //   // console.log("delete done!");
+  // }
+
+  // async createFile() {
+  //   if (fs.existsSync("timeMeasurement.csv")) {
+  //     console.log("File already exists.");
+  //   } else {
+  //     fs.writeFile(
+  //       "timeMeasurement.csv",
+  //       "id, key_number, value_size, put_duration, get_duration\n",
+  //       (err) => {
+  //         if (err) throw err;
+  //         console.log("File is created successfully.");
+  //       }
+  //     );
+  //   }
+  // }
 
   // write calculated time measurement to a csv file
   writeToFile(keyNumber) {
@@ -99,10 +98,12 @@ export default class API {
     const data = `${date.getTime()}, ${keyNumber}, ${this.valueSize}, ${
       this.putDuration
     }, ${this.getDuration} \n`;
-    fs.appendFile(`./logs/orbitdb_stats_${this.valueSize}.csv`, data, (err) => {
-      if (err) throw err;
-      console.log("Save done!");
-    });
+    const stream = fs.createWriteStream(
+      `./logs/orbitdb_stats_${this.valueSize}.csv`,
+      { flags: "a" }
+    );
+    stream.write(data);
+    stream.end();
     this.putDuration = 0;
     this.getDuration = 0;
   }
