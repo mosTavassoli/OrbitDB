@@ -8,7 +8,7 @@ value_size=$1
 keyNumber=(10,100,1000)
 
 initHeaderCSV () {
-  echo "id, key_number, value_size, put_duration[ms], get_duration[ms]" > $1
+  echo "id, key_number, value_size, put_duration, get_duration" > $1
 }
 
 initHeaderCSV ./logs/orbitdb_stats_$value_size.csv
