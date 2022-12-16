@@ -77,6 +77,7 @@ export default class API {
 
   // delete key-value pairs from the database
   del(keyNumber) {
+    let start, end;
     console.log("----------------- del start -----------------");
     for (let i = 0; i < keyNumber; i++) {
       start = performance.now();
