@@ -35,47 +35,54 @@ export default class API {
         write: [this.orbitdb.identity.id],
       },
     };
+    // Creates and opens a keyvalue database
     this.exp = await this.orbitdb.keyvalue("exp");
-    // await this.exp.load();
     this.onready();
   }
 
   // put key-value pairs into the database
-  async put(keyNumber) {
+  put(keyNumber) {
     let start, end;
     // for testing
     console.log("----------------- put start -----------------");
     for (let i = 0; i < keyNumber; i++) {
       const rand_string = this.randStr();
+      console.log(rand_string);
       start = performance.now();
-      await this.exp.put(`${this.prefix}-${i}`, rand_string);
+      this.exp.put(`${this.prefix}-${i}`, rand_string);
       end = performance.now();
       this.putDuration += end - start;
     }
+    console.log(
+      `put done in duration: ${this.putDuration} ms, for ${keyNumber} keyNumber`
+    );
   }
 
   // get values from the database
-  async get(keyNumber) {
+  get(keyNumber) {
     let start, end;
     console.log("----------------- get start -----------------");
     for (let i = 0; i < keyNumber; i++) {
       start = performance.now();
-      // this.start = new Date().getTime();
-      const value = await this.exp.get(`${this.prefix}-${i}`);
+      const key = `${this.prefix}-${i}`;
+      const value = this.exp.get(key);
       end = performance.now();
+      console.log(value);
       this.getDuration += end - start;
     }
+    console.log(
+      `get done in duration: ${this.getDuration} ms, for ${keyNumber} keyNumber`
+    );
     this.writeToFile(keyNumber);
   }
 
   // delete key-value pairs from the database
-  // async del(keyNumber) {
-  //   console.log("----------------- del start -----------------");
-  //   for (let i = 0; i < keyNumber; i++) {
-  //     await this.exp.del(`${this.prefix}-${i}`);
-  //   }
-  //   // console.log("delete done!");
-  // }
+  del(keyNumber) {
+    console.log("----------------- del start -----------------");
+    for (let i = 0; i < keyNumber; i++) {
+      this.exp.del(`${this.prefix}-${i}`);
+    }
+  }
 
   // async createFile() {
   //   if (fs.existsSync("timeMeasurement.csv")) {
@@ -95,9 +102,9 @@ export default class API {
   // write calculated time measurement to a csv file
   writeToFile(keyNumber) {
     const date = new Date();
-    const data = `${date.getTime()}, ${keyNumber}, ${this.valueSize}, ${
+    const data = `${date.getTime()},${keyNumber},${this.valueSize},${
       this.putDuration
-    }, ${this.getDuration} \n`;
+    },${this.getDuration}\n`;
     const stream = fs.createWriteStream(
       `./logs/orbitdb_stats_${this.valueSize}.csv`,
       { flags: "a" }

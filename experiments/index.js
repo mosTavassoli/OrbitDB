@@ -27,9 +27,15 @@ const main = async () => {
     api.onready = async () => {
       for (let keyNumber of keyNumbers) {
         for (let i = 0; i < 10; i++) {
-          await api.put(keyNumber);
-          await api.get(keyNumber);
-          // await api.del(keyNumber);
+          api.put(keyNumber);
+          await sleep(3000);
+          console.log("put finished");
+          api.get(keyNumber);
+          console.log("get finished");
+          await sleep(3000);
+          api.del(keyNumber);
+          console.log("del finished");
+          await sleep(2000);
         }
       }
     };
@@ -40,3 +46,7 @@ const main = async () => {
 };
 
 main();
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
