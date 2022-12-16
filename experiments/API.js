@@ -7,6 +7,7 @@ export default class API {
     this.OrbitDB = OrbitDB;
     this.putDuration = 0;
     this.getDuration = 0;
+    this.delDuration = 0;
     this.prefix = "key";
     this.keyNumber = keyNumbers;
     this.valueSize = valueSize;
@@ -64,8 +65,7 @@ export default class API {
     console.log("----------------- get start -----------------");
     for (let i = 0; i < keyNumber; i++) {
       start = performance.now();
-      const key = `${this.prefix}-${i}`;
-      const value = this.exp.get(key);
+      const value = this.exp.get(`${this.prefix}-${i}`);
       end = performance.now();
       console.log(value);
       this.getDuration += end - start;
@@ -73,14 +73,20 @@ export default class API {
     console.log(
       `get done in duration: ${this.getDuration} ms, for ${keyNumber} keyNumber`
     );
-    this.writeToFile(keyNumber);
   }
 
   // delete key-value pairs from the database
   del(keyNumber) {
     console.log("----------------- del start -----------------");
     for (let i = 0; i < keyNumber; i++) {
+      start = performance.now();
       this.exp.del(`${this.prefix}-${i}`);
+      end = performance.now();
+      this.delDuration += end - start;
+      console.log(
+        `delete done in duration: ${this.delDuration} ms, for ${keyNumber} keyNumber`
+      );
+      this.writeToFile(keyNumber);
     }
   }
 
@@ -104,7 +110,7 @@ export default class API {
     const date = new Date();
     const data = `${date.getTime()},${keyNumber},${this.valueSize},${
       this.putDuration
-    },${this.getDuration}\n`;
+    },${this.getDuration},${this.delDuration}\n`;
     const stream = fs.createWriteStream(
       `./logs/orbitdb_stats_${this.valueSize}.csv`,
       { flags: "a" }
@@ -113,6 +119,7 @@ export default class API {
     stream.end();
     this.putDuration = 0;
     this.getDuration = 0;
+    this.delDuration = 0;
   }
 
   // generate random string
