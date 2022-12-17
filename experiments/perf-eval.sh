@@ -5,7 +5,7 @@
 value_size=$1
 
 
-keyNumber=(10,50,100,500)
+keyNumber=(10,50,100,200)
 
 initHeaderCSV () {
   echo "id,key_number,value_size,put_duration,get_duration,del_duration" > $1

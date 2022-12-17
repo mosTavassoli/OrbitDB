@@ -16,14 +16,11 @@ export default class API {
 
   async create() {
     this.node = await this.Ipfs.create({
-      preload: { enabled: false },
+      // preload: { enabled: false },
+      start: true,
       repo: "./ipfs",
       // relay: { enabled: true, hop: { enabled: true, actice: true } },
       EXPERIMENTAL: { pubsub: true },
-      config: {
-        Bootstrap: [],
-        Addresses: { Swarm: [] },
-      },
     });
 
     await this._init();
@@ -37,7 +34,19 @@ export default class API {
       },
     };
     // Creates and opens a keyvalue database
-    this.exp = await this.orbitdb.keyvalue("exp");
+    this.exp = await this.orbitdb.keyvalue("exp", { overwrite: true });
+
+    // this.db = await this.orbitdb.open(address, {
+    //   sync: true,
+    //   create: true,
+    //   overwrite: true,
+    //   localOnly: false,
+    //   type: "keyvalue",
+    //   write: ["*"],
+    // });
+
+    // await this.db.load();
+    await this.exp.load();
     this.onready();
   }
 

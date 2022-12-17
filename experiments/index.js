@@ -28,11 +28,11 @@ const main = async () => {
       for (let keyNumber of keyNumbers) {
         for (let i = 0; i < 10; i++) {
           api.put(keyNumber);
-          await sleep(15000);
+          console.log("put finished");
           api.get(keyNumber);
-          await sleep(15000);
+          console.log("get finished");
           api.del(keyNumber);
-          await sleep(15000);
+          console.log("del finished");
           // await sleep(3000);
           // console.log("del finished");
           // await sleep(2000);
