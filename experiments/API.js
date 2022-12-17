@@ -84,11 +84,11 @@ export default class API {
       this.exp.del(`${this.prefix}-${i}`);
       end = performance.now();
       this.delDuration += end - start;
-      console.log(
-        `delete done in duration: ${this.delDuration} ms, for ${keyNumber} keyNumber`
-      );
-      this.writeToFile(keyNumber);
     }
+    console.log(
+      `delete done in duration: ${this.delDuration} ms, for ${keyNumber} keyNumber`
+    );
+    this.writeToFile(keyNumber);
   }
 
   // async createFile() {

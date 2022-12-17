@@ -26,13 +26,13 @@ const main = async () => {
     const api = new API(Ipfs, OrbitDB, keyNumbers, valueSize, rng);
     api.onready = async () => {
       for (let keyNumber of keyNumbers) {
-        for (let i = 0; i < 50; i++) {
+        for (let i = 0; i < 10; i++) {
           api.put(keyNumber);
-          await sleep(10000);
+          await sleep(15000);
           api.get(keyNumber);
-          await sleep(10000);
+          await sleep(15000);
           api.del(keyNumber);
-          await sleep(10000);
+          await sleep(15000);
           // await sleep(3000);
           // console.log("del finished");
           // await sleep(2000);
