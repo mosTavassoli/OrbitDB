@@ -1,3 +1,4 @@
+// This function is used to get the input data from the command line
 const GetInputData = () => {
   let keyNumbers = "";
   let valueSize = "";

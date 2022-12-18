@@ -1,4 +1,6 @@
 import fs from "fs";
+
+//  Write to file
 const writeToFile = (
   keyNumber,
   valueSize,
