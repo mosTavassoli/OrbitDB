@@ -10,10 +10,15 @@ const Api = async () => {
   for (let keyNumber of keyNumbers) {
     for (let i = 0; i < 10; i++) {
       await put(keyNumber);
-      get(keyNumber);
+      await get(keyNumber);
       await del(keyNumber);
     }
   }
+  console.log("done");
 };
 
 Api();
+
+// solve the issue of "Nodemon Error: "System limit for number of file watchers reached"
+// echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+// https://stackoverflow.com/questions/53930305/nodemon-error-system-limit-for-number-of-file-watchers-reached

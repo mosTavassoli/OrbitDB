@@ -4,10 +4,11 @@ import seedrandom from "seedrandom";
 import getInputData from "./GetInputData.js";
 import { EventEmitter } from "events";
 // increase the number of listeners. Default is 10, otherwise it will throw a warning
-EventEmitter.defaultMaxListeners = 1000;
+EventEmitter.defaultMaxListeners = 10000000;
 
 // create a new instance of ipfs and connect to the orbitdb database
 const dbConnection = async () => {
+  console.log("connecting to db");
   const ipfsOptions = { repo: "./ipfs" };
   const ipfs = await Ipfs.create(ipfsOptions);
   const orbitdb = await OrbitDB.createInstance(ipfs);
