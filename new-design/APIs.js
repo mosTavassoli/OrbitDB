@@ -3,7 +3,7 @@ import getInputData from "./index.js";
 
 // main function to start the test
 const Api = async () => {
-  const { put, get, del } = apiFunctions;
+  const { put, get, del, delCache } = apiFunctions;
   const _getInputData = getInputData.getInputData();
   if (_getInputData === null) return;
   const { keyNumbers } = _getInputData;
@@ -12,6 +12,7 @@ const Api = async () => {
       await put(keyNumber);
       await get(keyNumber);
       await del(keyNumber);
+      // await delCache(keyNumber);
     }
   }
   console.log("done");

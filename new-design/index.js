@@ -12,7 +12,13 @@ const dbConnection = async () => {
   const ipfsOptions = { repo: "./ipfs" };
   const ipfs = await Ipfs.create(ipfsOptions);
   const orbitdb = await OrbitDB.createInstance(ipfs);
-  const db = await orbitdb.keyvalue("test", { overwrite: true });
+  const db = await orbitdb.keyvalue("test", {
+    overwrite: true,
+    replicate: true,
+    accessController: {
+      write: ["*"],
+    },
+  });
   await db.load();
   return db;
 };
