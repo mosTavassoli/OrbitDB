@@ -14,26 +14,23 @@ const _writeToFile = writeToFile;
 
 // Put all keys to db - async
 const put = async (keyNumber) => {
-  let start = 0;
-  let end = 0;
   for (let i = 0; i < keyNumber; i++) {
     const rand_string = randStr();
-    start = performance.now();
+    const start = performance.now();
     await conncetion.put(`key-${i}`, rand_string);
-    end = performance.now();
+    const end = performance.now();
     putDuration += end - start;
   }
+
   console.log(`put done in duration: ${putDuration} ms`);
 };
 
 // Get all keys from db
 const get = async (keyNumber) => {
-  let start = 0;
-  let end = 0;
   for (let i = 0; i < keyNumber; i++) {
-    start = performance.now();
-    await conncetion.get(`key-${i}`);
-    end = performance.now();
+    const start = performance.now();
+    const value = await conncetion.get(`key-${i}`);
+    const end = performance.now();
     getDuration += end - start;
   }
   console.log(`get done in duration: ${getDuration} ms`);
@@ -41,12 +38,10 @@ const get = async (keyNumber) => {
 
 // Delete all keys from db
 const del = async (keyNumber) => {
-  let start = 0;
-  let end = 0;
   for (let i = 0; i < keyNumber; i++) {
-    start = performance.now();
+    const start = performance.now();
     await conncetion.del(`key-${i}`);
-    end = performance.now();
+    const end = performance.now();
     delDuration += end - start;
   }
   console.log(`delete done in duration: ${delDuration} ms`);
