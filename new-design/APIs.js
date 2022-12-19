@@ -8,7 +8,7 @@ const Api = async () => {
   if (_getInputData === null) return;
   const { keyNumbers } = _getInputData;
   for (let keyNumber of keyNumbers) {
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 10; i++) {
       await put(keyNumber);
       await get(keyNumber);
       await del(keyNumber);
