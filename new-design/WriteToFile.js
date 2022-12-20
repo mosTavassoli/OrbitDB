@@ -1,6 +1,13 @@
 import fs from "fs";
 
-//  Write to file
+/**
+ * @description write to file
+ * @param {number} keyNumber
+ * @param {number} valueSize
+ * @param {number} putDuration
+ * @param {number} getDuration
+ * @param {number} delDuration
+ */
 const writeToFile = (
   keyNumber,
   valueSize,

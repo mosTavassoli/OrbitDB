@@ -1,7 +1,9 @@
 import apiFunctions from "./PerfTest.js";
 import getInputData from "./index.js";
 
-// main function to start the test
+/**
+ * @description main function to start the test
+ */
 const Api = async () => {
   const { put, get, del, delCache } = apiFunctions;
   const _getInputData = getInputData.getInputData();

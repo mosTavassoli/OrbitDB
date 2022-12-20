@@ -6,12 +6,15 @@ import { EventEmitter } from "events";
 // increase the number of listeners. Default is 10, otherwise it will throw a warning
 EventEmitter.defaultMaxListeners = 10000000;
 
-// create a new instance of ipfs and connect to the orbitdb database
+/**
+ * @description connect to the orbitdb database
+ * @returns {Promise<OrbitDB.KeyValueStore>}
+ */
 const dbConnection = async () => {
   console.log("connecting to db");
   const ipfsOptions = {
+    preload: { enabled: false },
     repo: "./ipfs",
-    start: true,
     EXPERIMENTAL: {
       pubsub: true,
     },
@@ -20,7 +23,6 @@ const dbConnection = async () => {
   const orbitdb = await OrbitDB.createInstance(ipfs);
   const db = await orbitdb.keyvalue("test", {
     overwrite: true,
-    replicate: true,
     accessController: {
       write: ["*"],
     },
@@ -28,8 +30,6 @@ const dbConnection = async () => {
   await db.load();
   return db;
 };
-
-// create a random number generator
 
 const rng = seedrandom();
 const data = {

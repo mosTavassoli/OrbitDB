@@ -1,4 +1,3 @@
-import moment from "moment";
 import data from "./index.js";
 import getInputData from "./index.js";
 import writeToFile from "./WriteToFile.js";
@@ -11,42 +10,59 @@ const cache = new Cache();
 let putDuration = 0;
 let getDuration = 0;
 let delDuration = 0;
+let putIndex = 0;
+let getIndex = 0;
+let delIndex = 0;
 
 const _valueSize = getInputData.getInputData().valueSize;
 const _writeToFile = writeToFile;
 
-// Put all keys to db - async
+/**
+ * @description put all keys to db
+ * @param {number} keyNumber
+ */
 const put = async (keyNumber) => {
   for (let i = 0; i < keyNumber; i++) {
     const rand_string = randStr();
     const start = performance.now();
-    await conncetion.put(`key-${i}`, rand_string);
+    await conncetion.put(`key-${putIndex}`, rand_string);
     const end = performance.now();
     putDuration += end - start;
+    console.log(rand_string);
+    putIndex++;
   }
-  // console.log(`put done in duration: ${putDuration} ms`);
+  console.log(`put done in duration: ${putDuration} ms`);
 };
 
-// Get all keys from db
+/**
+ * @description get all keys from db
+ * @param {number} keyNumber
+ */
 const get = async (keyNumber) => {
   for (let i = 0; i < keyNumber; i++) {
     const start = performance.now();
-    const value = await conncetion.get(`key-${i}`);
+    const value = conncetion.get(`key-${getIndex}`);
     const end = performance.now();
     getDuration += end - start;
+    console.log(value);
+    getIndex++;
   }
-  // console.log(`get done in duration: ${getDuration} ms`);
+  console.log(`get done in duration: ${getDuration} ms`);
 };
 
-// Delete all keys from db
+/**
+ * @description delete all keys from db
+ * @param {number} keyNumber
+ */
 const del = async (keyNumber) => {
   for (let i = 0; i < keyNumber; i++) {
     const start = performance.now();
-    await conncetion.del(`key-${i}`);
+    await conncetion.del(`key-${delIndex}`);
     const end = performance.now();
     delDuration += end - start;
+    delIndex++;
   }
-  // console.log(`del done in duration: ${delDuration} ms`);
+  console.log(`del done in duration: ${delDuration} ms`);
   _writeToFile(keyNumber, _valueSize, putDuration, getDuration, delDuration);
   putDuration = 0;
   getDuration = 0;
@@ -61,7 +77,10 @@ const delCache = async (keyNumber) => {
   }
 };
 
-// Generate random string
+/**
+ * @description generate random string
+ * @returns {string} random string
+ */
 const randStr = () => {
   const rng = data.rng;
   // const chars =

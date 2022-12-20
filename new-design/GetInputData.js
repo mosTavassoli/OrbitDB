@@ -1,4 +1,7 @@
-// This function is used to get the input data from the command line
+/**
+ * @description get the input data from the command line
+ * @returns {Object} {keyNumbers, valueSize}
+ */
 const GetInputData = () => {
   let keyNumbers = "";
   let valueSize = "";
