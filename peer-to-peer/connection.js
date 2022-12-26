@@ -14,28 +14,29 @@ const dbConnection = async () => {
   console.log("connecting to db");
   const ipfsOptions = {
     relay: { enabled: true, hop: { enabled: true, active: true } },
+    // config: { Bootstrap: [], Addresses: { Swarm: [] } },
     // repo: "./ipfs",
     EXPERIMENTAL: {
       pubsub: true,
-      config: {
-        Addresses: {
-          // ...And supply a swarm address to announce on to find other peers
-          Swarm: [
-            "/dns4/ws-star.discovery.libp2p.io/tcp/443/wss/p2p-websocket-star",
-          ],
-        },
-      },
     },
   };
   const ipfs = await Ipfs.create(ipfsOptions);
   // const orbitdb = await OrbitDB.createInstance(ipfs);
+  // console.log(await ipfs.bootstrap.list());
   await ipfs.bootstrap.list();
   await ipfs.bootstrap.reset();
+  ipfs.config.set(
+    "Addresses.Swarm",
+    ["/ip4/0.0.0.0/tcp/4002", "/ip4/127.0.0.1/tcp/4003/ws"],
+    console.log
+  );
+  console.log(await ipfs.bootstrap.list());
   // console.log(await ipfs.bootstrap.list());
+  // console.log(await ipfs.config.get("Addresses.Swarm"));
 
-  console.log(await ipfs.config.get("Addresses.Swarm"));
+  // console.log(await ipfs.config.get("Addresses.Swarm"));
   // console.log(await ipfs.swarm.peers());
-  console.log(await ipfs.id());
+  // console.log(await ipfs.id());
   // const db = await orbitdb.keyvalue("test", {
   //   overwrite: true,
   //   replicate: true,
