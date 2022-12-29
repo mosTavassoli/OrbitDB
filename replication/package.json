@@ -1,0 +1,24 @@
+{
+    "name": "orbitdb",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "type": "module",
+    "scripts": {
+        "producer": "nodemon replication/producer.js",
+        "consumer": "nodemon replication/consumer.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@types/orbit-db": "github:orbitdb/orbit-db-types",
+        "ipfs": "^0.46.0",
+        "moment": "^2.29.4",
+        "multiformats": "^9.9.0",
+        "orbit-db": "^0.24.1",
+        "orbit-db-cache": "^0.4.1",
+        "orbit-db-identity-provider": "^0.3.0",
+        "seedrandom": "^3.0.5"
+    }
+}
