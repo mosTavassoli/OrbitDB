@@ -175,7 +175,7 @@ const startProducer = async () => {
   intervalHandle = setInterval(async () => {
     i += 1;
     await publishIpfsMessage(
-      "orbitdb-remote-poc",
+      "replication-orbitdb",
       Buffer.from(`producer_${i}`)
     );
     await writeDatabase({ _id: `p-${i}`, value: "from producer" + i });
