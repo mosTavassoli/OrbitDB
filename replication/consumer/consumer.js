@@ -129,7 +129,7 @@ const consumerStart = async () => {
   }
   await bootIpfs();
   await bootOrbitdb(databaseAddress);
-  subscribeTopic("orbitdb-remote-poc");
+  subscribeTopic("replication-orbitdb");
   subscribeReplication();
 };
 
